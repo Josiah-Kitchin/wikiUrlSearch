@@ -28,7 +28,6 @@ HashTable* searchUrls(char* url, char* endUrl){
 	nextElementsToDepthIncrease = 0;
 
     while (urlQ->size && urlQ->end < MAX_TOTAL_URLS){
-
 	char* currentUrl = dequeue(urlQ); 
 	char** urlNeighbors = getUrls(currentUrl); 
 	if (!urlNeighbors){
@@ -49,12 +48,9 @@ HashTable* searchUrls(char* url, char* endUrl){
 		break; 
 	    }
 	    currentNeighbor = urlNeighbors[i]; 
-
-	    
 	    if (!currentNeighbor || isInHT(urlHt, currentNeighbor)){
 		continue; 
 	    }
-
 	    //endUrl found case
 	    if (strcmp(currentNeighbor, endUrl) == 0){
 		printf("%s Wiki found from %s Wiki in %d page(s)!\n", endUrl, url, currentDepth); 
@@ -63,27 +59,22 @@ HashTable* searchUrls(char* url, char* endUrl){
 		freeQueue(urlQ); 
 		return urlHt; 
 	    }
-
 	    storeUrl(urlHt, currentNeighbor); 
 	    enqueue(urlQ, currentNeighbor); 
 	    neighborSize++; 
 	}
-	
 	//Calculate depth 
 	nextElementsToDepthIncrease += neighborSize;
 	if (elementsToDepthIncrease-- == 0) {
 	     currentDepth++; 
 	     elementsToDepthIncrease = nextElementsToDepthIncrease;
 	     nextElementsToDepthIncrease = 0;
-	}
-
-
+	}  
 	//store url and enqueue use strdup, so we can safely free these
 	freeUrls(urlNeighbors); 
 	free(currentUrl); 
     }
     freeQueue(urlQ); //frees whats left in the queue 
-    
     printf("%s wiki could not be found from %s wiki with a limit of %d searches\n", endUrl, url, MAX_TOTAL_URLS); 
     return urlHt;
 }
